@@ -1,0 +1,418 @@
+fileFormatVersion: 2
+guid: 0b1e17eef59c61247a2adb3016aa9ead
+timeCreated: 1436793107
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Platforms2_0
+    21300002: Platforms2_1
+    21300004: Platforms2_2
+    21300006: Platforms2_3
+    21300008: Platforms2_4
+    21300010: Platforms2_5
+    21300012: Platforms2_6
+    21300014: Platforms2_7
+    21300016: Platforms2_8
+    21300018: Platforms2_9
+    21300020: Platforms2_10
+    21300022: Platforms2_13
+    21300024: Platforms2_14
+    21300026: Platforms2_15
+    21300028: Platforms2_16
+    21300030: Platforms2_17
+    21300032: Platforms2_19
+    21300034: Platforms2_20
+    21300036: Platforms2_21
+    21300038: Platforms2_22
+    21300040: Platforms2_25
+    21300042: Platforms2_26
+    21300044: Platforms2_27
+    21300046: Platforms2_28
+    21300048: Platforms2_29
+    21300050: Platforms2_30
+    21300052: Platforms2_31
+    21300054: Platforms2_32
+    21300056: Platforms2_33
+    21300058: Platforms2_34
+    21300060: Platforms2_35
+    21300062: Platforms2_36
+    21300064: Platforms2_37
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Platforms2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 381
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_1
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 387
+        width: 45
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_2
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 396
+        width: 39
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_3
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 326
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_4
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 326
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_5
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 326
+        width: 45
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_6
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 327
+        width: 45
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_7
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 269
+        width: 36
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_8
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 269
+        width: 36
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_9
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 269
+        width: 47
+        height: 48
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_10
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 268
+        width: 48
+        height: 49
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_13
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 213
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_14
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 213
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_15
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 213
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_16
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 213
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_17
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 154
+        width: 46
+        height: 45
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_19
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 156
+        width: 45
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_20
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 156
+        width: 44
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_21
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 157
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_22
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 157
+        width: 42
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_25
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 105
+        width: 45
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_26
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 105
+        width: 45
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_27
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 105
+        width: 45
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_28
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 63
+        width: 39
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_29
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 63
+        width: 39
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_30
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 63
+        width: 39
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_31
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 63
+        width: 39
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_32
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 21
+        width: 39
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_33
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 18
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_34
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 18
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_35
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 18
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_36
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 6
+        width: 24
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Platforms2_37
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 12
+        width: 42
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
