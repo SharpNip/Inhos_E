@@ -5,8 +5,9 @@ public class Maya
     : MonoBehaviour 
 {
 	// Status Variables
+    public bool isDead;
+    private bool isSafe;
 	private bool isIdle;
-	private bool isSafe;
 	private bool canClimb;
 	private bool onGround;
 	private float radLevel;
@@ -15,22 +16,22 @@ public class Maya
 	private const float MAX_RAD = 100;
 	private const float MAX_SPD = 10;
     private const float INCREMENTATION = 3;
+    private bool goingRight;
 	private float jumpHeight;
 	private float speed;
 	private float climbSpeed;
-    private Vector2 direction;
-    
 
 	// Body components
 	private Rigidbody2D body;
 
 	// Collider Tags
 	private const string GROUND = "Ground";
-	private const string SAFE_AREA = "Safe";
+	private const string SAFE_AREA = "SafeZone";
 	private const string SPIKES = "Spikes";
 	private const string DANGER_AREA = "RadBarrel";
 	private const string LADDER = "Ladder";
 	private const string SDPTA = "Bottle";
+    private const string WALL = "Wall";
 
 	void Start () 
     {
@@ -39,40 +40,35 @@ public class Maya
         //Setting all status variables
 		radLevel = 0;
         speed = 0;
-		climbSpeed = .01f;
-		jumpHeight = 3;
-        isSafe = false;
+		climbSpeed = .05f;
+		jumpHeight = 2.5f;
         canClimb = false;
         isIdle = true;
 		onGround = true;
+        goingRight = false;
+        isSafe = true;
+        isDead = false;
 	}
 
 	void Update()
 	{
-		
 		ManageInput();
-        HandleStates();
+        ManageStates();
+        Debug.Log(radLevel);
     }
-
-	private void HandleStates()
-	{
-		if (!isSafe)
-		{
-			Irradiate();
-		}
-		else
-		{
-			Heal();
-		}
-
-       
-
-	}
-
+    private void ManageStates()
+    {
+        if(!isSafe)
+        {
+            Irradiate(2.0f);
+        }
+    }
 	private void ManageInput()
 	{
+        // Going Left
 		if (Input.GetKey(KeyCode.A))
 		{
+            goingRight = false;
             isIdle = false;
             if (speed > MAX_SPD)
             {
@@ -80,13 +76,14 @@ public class Maya
             }
             else
             {
-                speed += INCREMENTATION;
-                direction = -Vector2.right;
-                WalkLeft();
+                speed += INCREMENTATION;   
+                Walk(-Vector2.right);
             }
 		}
+        // Going Right
         else if (Input.GetKey(KeyCode.D))
         {
+            goingRight = true;
             isIdle = false;
             if (speed > MAX_SPD)
             {
@@ -95,10 +92,8 @@ public class Maya
             else
             {
                 speed += INCREMENTATION;
-                direction = Vector2.right;
-                WalkRight();
+                Walk(Vector2.right);
             }
-
         }
         else
         {
@@ -110,55 +105,66 @@ public class Maya
                 speed -= INCREMENTATION;
             }
         }
+        // Jumping
 		if (Input.GetKey(KeyCode.W))
 		{
             isIdle = false;
-			if(canClimb)
+            if (canClimb)
             {
-                direction = Vector2.up;
-                Climb();   
+                Climb(Vector2.up);
             }
 			else
 			{
 				Jump();
 			}
 		}
-		
+        if (Input.GetKey(KeyCode.S))
+        {
+            isIdle = false;
+            if (canClimb)
+            {
+                Climb(-Vector2.up);
+            }
+        }
 	}
     
 	void OnCollisionStay2D(Collision2D col)
 	{
-        if (!(col.contacts[0].normal == Vector2.up))
+        // Checks if the collider encountered is the ground
+        if (col.gameObject.CompareTag(GROUND))
         {
-            onGround = false;
-        }
-        else
-        {
-            onGround = true;
-        }
-
-        foreach (ContactPoint2D contact in col.contacts)
-        {
-            Debug.DrawRay(contact.point, contact.normal, Color.white);
-        }
+            // Looks through all of the contact points in the array to get the normal
+            foreach (ContactPoint2D contact in col.contacts)
+            {
+                if (contact.normal == Vector2.up)
+                {
+                    onGround = true;
+                }
+                else
+                {
+                    onGround = false;
+                }
+            }
+        }        
 	}
 	void OnCollisionEnter2D(Collision2D collider)
 	{
 		if (collider.gameObject.CompareTag (SPIKES)) 
 		{
-			Debug.Log("You're Dead!!");
+            isDead = true;
 		}
 	}
-
     void OnTriggerStay2D(Collider2D other)
-    {
+    {            
         if (other.CompareTag(SAFE_AREA))
         {
-            isSafe = true;
+            SafeZone safety = (SafeZone)other.gameObject.GetComponent(SAFE_AREA);
+            Heal(safety.GetRestored());
 		}
-		if (other.CompareTag (DANGER_AREA)) 
+		if (other.CompareTag(DANGER_AREA)) 
 		{
-            
+            RadBarrel barrel = (RadBarrel)other.gameObject.GetComponent(DANGER_AREA);
+            Irradiate(barrel.GetRadiation());
 		}
         if(other.CompareTag(LADDER))
         {
@@ -179,15 +185,10 @@ public class Maya
         {
             canClimb = false;
             body.gravityScale = 1;
-        }
-        
+        }        
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(SAFE_AREA))
-        {
-            isSafe = true;
-        }
         if (other.CompareTag(LADDER))
         {
             canClimb = true;
@@ -195,7 +196,12 @@ public class Maya
         }
         if (other.CompareTag(SDPTA))
         {
-            radLevel = 0;
+            Bottle bottle = (Bottle)other.gameObject.GetComponent("Bottle");
+            Heal(bottle.GetRestored());
+        }
+        if (other.CompareTag(SAFE_AREA))
+        {
+            isSafe = true;
         }
     }
 
@@ -208,39 +214,59 @@ public class Maya
 		}
     }
 
-    private void WalkRight()
+    private void Walk(Vector2 dir)
     {
-      	Vector2 movement = direction * speed * Time.deltaTime;
-		
-        body.velocity += movement;
-
-        if (body.velocity.x > MAX_SPD)
+      	Vector2 movement = dir * speed * Time.deltaTime;
+        if (onGround || canClimb)
         {
-            body.velocity -= movement;
+            body.velocity += movement;
+        }
+        if (goingRight)
+        {
+            if (body.velocity.x > MAX_SPD)
+            {
+                body.velocity -= movement;
+            }
+        }
+        else
+        {
+            if (body.velocity.x < -MAX_SPD)
+            {
+                body.velocity -= movement;
+            }
         }
     }
-    private void WalkLeft()
+    
+    private void Climb(Vector2 up)
     {
-        Vector2 movement = direction * speed * Time.deltaTime;
-        body.velocity += movement;
-        if (body.velocity.x < -MAX_SPD)
-        {
-            body.velocity -= movement;
-        }
-    }
-    private void Climb()
-    {
-        body.position = body.position + (direction * climbSpeed); 
+        body.position = body.position + (up * climbSpeed); 
  
     }
 
-    private void Irradiate()
+    private void Irradiate(float amount)
     {
-        
+        radLevel += amount * Time.deltaTime;
+        if (radLevel > MAX_RAD)
+        {
+            DieAndReset();
+        }
     }
 
-    private void Heal()
+    private void Heal(float amount)
     {
+        radLevel -= amount * Time.deltaTime;
+        if (radLevel < 0)
+        {
+            radLevel = 0;
+        }
+    }
 
+    public float GetRadLevel()
+    {
+        return radLevel;
+    }
+    private void DieAndReset()
+    {
+        isDead = true;
     }
 }
