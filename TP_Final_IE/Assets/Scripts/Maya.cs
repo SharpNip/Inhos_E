@@ -13,16 +13,16 @@ public class Maya
 
 	// Movement variables
 	private const float MAX_RAD = 100;
-	private const float MAX_SPD = 3;
-	private const float MAX_CLIMBSPD = 2;
-	private Vector2 direction;
+	private const float MAX_SPD = 10;
+    private const float INCREMENTATION = 3;
 	private float jumpHeight;
 	private float speed;
 	private float climbSpeed;
+    private Vector2 direction;
+    
 
 	// Body components
 	private Rigidbody2D body;
-	private BoxCollider2D collider;
 
 	// Collider Tags
 	private const string GROUND = "Ground";
@@ -36,11 +36,10 @@ public class Maya
     {
 		//Initialiasation of body components
         body = GetComponent<Rigidbody2D>();
-        collider = GetComponent<BoxCollider2D>();
         //Setting all status variables
 		radLevel = 0;
         speed = 0;
-		climbSpeed = 0;
+		climbSpeed = .01f;
 		jumpHeight = 3;
         isSafe = false;
         canClimb = false;
@@ -50,9 +49,10 @@ public class Maya
 
 	void Update()
 	{
-		HandleStates();
-		ManageInput();    
-	}
+		
+		ManageInput();
+        HandleStates();
+    }
 
 	private void HandleStates()
 	{
@@ -64,41 +64,83 @@ public class Maya
 		{
 			Heal();
 		}
+
+       
+
 	}
 
 	private void ManageInput()
 	{
-		if (Input.GetKey("a"))
+		if (Input.GetKey(KeyCode.A))
 		{
-			direction = -Vector2.right;
-			Walk();
+            isIdle = false;
+            if (speed > MAX_SPD)
+            {
+                speed = MAX_SPD;
+            }
+            else
+            {
+                speed += INCREMENTATION;
+                direction = -Vector2.right;
+                WalkLeft();
+            }
 		}
-		else if (Input.GetKey("d"))
+        else if (Input.GetKey(KeyCode.D))
+        {
+            isIdle = false;
+            if (speed > MAX_SPD)
+            {
+                speed = MAX_SPD;
+            }
+            else
+            {
+                speed += INCREMENTATION;
+                direction = Vector2.right;
+                WalkRight();
+            }
+
+        }
+        else
+        {
+            isIdle = true;
+
+            if (speed > 0 && onGround)
+            {
+                body.velocity -= body.velocity / INCREMENTATION;
+                speed -= INCREMENTATION;
+            }
+        }
+		if (Input.GetKey(KeyCode.W))
 		{
-			direction = Vector2.right;
-			Walk();
-		}
-		else if (Input.GetKey("w"))
-		{
+            isIdle = false;
 			if(canClimb)
-			{
-				Climb();
-			}
+            {
+                direction = Vector2.up;
+                Climb();   
+            }
 			else
 			{
 				Jump();
 			}
 		}
-		else
-		{
-			isIdle = true;
-		}
+		
 	}
     
-	void OnCollisionStay2D(Collision2D collider)
+	void OnCollisionStay2D(Collision2D col)
 	{
-		// Checks for ground contact
-		onGround = (collider.gameObject.CompareTag (GROUND)) ? true : false;
+        if (!(col.contacts[0].normal == Vector2.up))
+        {
+            onGround = false;
+        }
+        else
+        {
+            onGround = true;
+        }
+
+        foreach (ContactPoint2D contact in col.contacts)
+        {
+            Debug.DrawRay(contact.point, contact.normal, Color.white);
+        }
 	}
 	void OnCollisionEnter2D(Collision2D collider)
 	{
@@ -116,15 +158,14 @@ public class Maya
 		}
 		if (other.CompareTag (DANGER_AREA)) 
 		{
-
+            
 		}
-        if (other.CompareTag(LADDER))
+        if(other.CompareTag(LADDER))
         {
-            canClimb = true;
-        }
-        if (other.CompareTag(SDPTA))
-        {
-            radLevel = 0;
+            if (isIdle && canClimb)
+            {
+                body.velocity = Vector2.zero;
+            }
         }
     }
 
@@ -133,6 +174,28 @@ public class Maya
         if (other.CompareTag(SAFE_AREA))
         {
             isSafe = false;
+        }
+        if (other.CompareTag(LADDER))
+        {
+            canClimb = false;
+            body.gravityScale = 1;
+        }
+        
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag(SAFE_AREA))
+        {
+            isSafe = true;
+        }
+        if (other.CompareTag(LADDER))
+        {
+            canClimb = true;
+            body.gravityScale = 0;
+        }
+        if (other.CompareTag(SDPTA))
+        {
+            radLevel = 0;
         }
     }
 
@@ -145,20 +208,30 @@ public class Maya
 		}
     }
 
-    private void Walk()
+    private void WalkRight()
     {
-        if (speed < MAX_SPD)
-        {
-            speed += MAX_SPD * Time.deltaTime;
-        }
-        body.velocity = direction * speed;
-    }
+      	Vector2 movement = direction * speed * Time.deltaTime;
+		
+        body.velocity += movement;
 
+        if (body.velocity.x > MAX_SPD)
+        {
+            body.velocity -= movement;
+        }
+    }
+    private void WalkLeft()
+    {
+        Vector2 movement = direction * speed * Time.deltaTime;
+        body.velocity += movement;
+        if (body.velocity.x < -MAX_SPD)
+        {
+            body.velocity -= movement;
+        }
+    }
     private void Climb()
     {
-		if(speed < MAX_CLIMBSPD)
-
-		body.velocity = direction * speed;
+        body.position = body.position + (direction * climbSpeed); 
+ 
     }
 
     private void Irradiate()

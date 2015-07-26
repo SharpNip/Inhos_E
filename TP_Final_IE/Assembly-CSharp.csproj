@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Barrel.cs" />
      <Compile Include="Assets\Scripts\Bottle.cs" />
+     <Compile Include="Assets\Scripts\Camera.cs" />
      <Compile Include="Assets\Scripts\Door.cs" />
      <Compile Include="Assets\Scripts\Maya.cs" />
  <Reference Include="UnityEngine.UI">
