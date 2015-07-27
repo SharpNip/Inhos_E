@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StartScreen : MonoBehaviour {
+public class StartScreen 
+{
 
-	// Use this for initialization
-	void Start () {
+    public const string START_LEVEL = "Level_One"; 
+    private void StartGame()
+    {
+        Application.LoadLevel(START_LEVEL);
+    }
 	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
