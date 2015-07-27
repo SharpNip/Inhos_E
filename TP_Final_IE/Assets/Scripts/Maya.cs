@@ -4,6 +4,14 @@ using System.Collections;
 public class Maya 
     : MonoBehaviour 
 {
+
+    /*
+     * THE START FUNCTION IN THE LOCALISATION TOOL
+     * 
+     * Change the "Start" function from Start to Awake to ensure that the right date is loaded BEFORE
+     * The game is started, to avoid having a bunch of nullllls.
+     */
+
 	// Status Variables
     public bool isDead;
     private bool isSafe;
@@ -54,7 +62,6 @@ public class Maya
 	{
 		ManageInput();
         ManageStates();
-        Debug.Log(radLevel);
     }
     private void ManageStates()
     {

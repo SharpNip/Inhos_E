@@ -19,8 +19,8 @@ public class GeigerHUD
         currentRads = 0.0f;
         currentLevel = Application.loadedLevelName;
         startDial = Quaternion.Euler(0.0f, 0.0f, 40.0f);
-        endDial = Quaternion.Euler(0.0f, 0.0f, 320.0f);
-        arrow.transform.localRotation = startDial;        
+        endDial = Quaternion.Euler(0.0f, 0.0f, -40.0f);
+        arrow.transform.rotation = startDial;        
 	}
 	
 	// Update is called once per frame
@@ -56,13 +56,10 @@ public class GeigerHUD
     }
     private void ManageCounterLevel(float radLevel)
     {
-        float resultAngle = radLevel / Quaternion.Angle(endDial, startDial);
-        Quaternion tempRot = Quaternion.Euler(0.0f, 0.0f, resultAngle);
-        
-        Debug.Log(resultAngle);
-
-        arrow.transform.localRotation = tempRot;
-
+        float currentLevel = radLevel * ((Quaternion.Angle(startDial, endDial)) / 100f);
+        float temp = Quaternion.Angle(startDial , Quaternion.Euler(0.0f, 0.0f, -currentLevel));
+        Vector3 rotation = new Vector3(0.0f, 0.0f, temp);
+        arrow.transform.eulerAngles = rotation;
     }
     private void ResetLevel()
     {
