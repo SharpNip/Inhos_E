@@ -32,11 +32,11 @@ public class Bottle
                 restoration = 100.0f;
                 isActive = false;
                 mySprite.enabled = false;
+                myCol.enabled = false;
             }
-
         }
-        
     }
+
     public float GetRestored()
     {
         return restoration;

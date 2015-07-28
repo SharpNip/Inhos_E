@@ -12,6 +12,9 @@ public class Maya
      * The game is started, to avoid having a bunch of nullllls.
      */
 
+    // Gameplay Variables
+    private const float RADIATION = 3.0f;
+
 	// Status Variables
     public bool isDead;
     private bool isSafe;
@@ -67,7 +70,7 @@ public class Maya
     {
         if(!isSafe)
         {
-            Irradiate(2.0f);
+            Irradiate(RADIATION);
         }
     }
 	private void ManageInput()
@@ -166,7 +169,7 @@ public class Maya
         if (other.CompareTag(SAFE_AREA))
         {
             SafeZone safety = (SafeZone)other.gameObject.GetComponent(SAFE_AREA);
-            Heal(safety.GetRestored());
+            Heal(safety.GetRestored(), false);
 		}
 		if (other.CompareTag(DANGER_AREA)) 
 		{
@@ -203,8 +206,8 @@ public class Maya
         }
         if (other.CompareTag(SDPTA))
         {
-            Bottle bottle = (Bottle)other.gameObject.GetComponent("Bottle");
-            Heal(bottle.GetRestored());
+            Bottle bottle = (Bottle)other.gameObject.GetComponent(SDPTA);
+            Heal(bottle.GetRestored(), true);
         }
         if (other.CompareTag(SAFE_AREA))
         {
@@ -259,13 +262,18 @@ public class Maya
         }
     }
 
-    private void Heal(float amount)
+    private void Heal(float amount, bool isMeds)
     {
+        if (isMeds)
+        {
+            radLevel -= amount;   
+        }
         radLevel -= amount * Time.deltaTime;
         if (radLevel < 0)
         {
             radLevel = 0;
         }
+        
     }
 
     public float GetRadLevel()

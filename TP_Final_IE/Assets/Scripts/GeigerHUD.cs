@@ -18,8 +18,8 @@ public class GeigerHUD
         player = (Maya)FindObjectOfType(typeof(Maya));
         currentRads = 0.0f;
         currentLevel = Application.loadedLevelName;
-        startDial = Quaternion.Euler(0.0f, 0.0f, 40.0f);
-        endDial = Quaternion.Euler(0.0f, 0.0f, -40.0f);
+        startDial = Quaternion.Euler(0.0f, 0.0f, 45.0f);
+        endDial = Quaternion.Euler(0.0f, 0.0f, -45.0f);
         arrow.transform.rotation = startDial;        
 	}
 	
@@ -57,9 +57,10 @@ public class GeigerHUD
     private void ManageCounterLevel(float radLevel)
     {
         float currentLevel = radLevel * ((Quaternion.Angle(startDial, endDial)) / 100f);
-        float temp = Quaternion.Angle(startDial , Quaternion.Euler(0.0f, 0.0f, -currentLevel));
-        Vector3 rotation = new Vector3(0.0f, 0.0f, temp);
-        arrow.transform.eulerAngles = rotation;
+
+
+
+        arrow.transform.rotation = Quaternion.RotateTowards(startDial, endDial, currentLevel);
     }
     private void ResetLevel()
     {
