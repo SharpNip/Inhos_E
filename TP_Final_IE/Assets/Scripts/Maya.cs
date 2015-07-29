@@ -17,6 +17,7 @@ public class Maya
 
 	// Status Variables
     public bool isDead;
+    private bool died;
     private bool isSafe;
 	private bool isIdle;
 	private bool canClimb;
@@ -44,6 +45,16 @@ public class Maya
 	private const string SDPTA = "Bottle";
     private const string WALL = "Wall";
 
+    // Sound Effects
+    public AudioClip jumpSound;
+    public AudioClip landSound;
+    public AudioClip deathSound;
+    private AudioSource soundSource;
+
+    void Awake()
+    {
+        soundSource = GetComponent<AudioSource>();
+    }
 	void Start () 
     {
 		//Initialiasation of body components
@@ -52,13 +63,14 @@ public class Maya
 		radLevel = 0;
         speed = 0;
 		climbSpeed = .05f;
-		jumpHeight = 2.5f;
+		jumpHeight = 5f;
         canClimb = false;
         isIdle = true;
 		onGround = true;
         goingRight = false;
         isSafe = true;
         isDead = false;
+        died = false;
 	}
 
 	void Update()
@@ -122,6 +134,7 @@ public class Maya
             if (canClimb)
             {
                 Climb(Vector2.up);
+                
             }
 			else
 			{
@@ -141,28 +154,38 @@ public class Maya
 	void OnCollisionStay2D(Collision2D col)
 	{
         // Checks if the collider encountered is the ground
-        if (col.gameObject.CompareTag(GROUND))
+              
+	}
+    void OnCollisionExit2D(Collision2D collider)
+    {
+        if (collider.gameObject.CompareTag(GROUND))
+        {
+            onGround = false;
+        }  
+    }
+	void OnCollisionEnter2D(Collision2D collider)
+	{
+		if (collider.gameObject.CompareTag (SPIKES)) 
+		{
+            StartCoroutine(DieAndReset());
+            
+		}
+        if (collider.gameObject.CompareTag(GROUND))
         {
             // Looks through all of the contact points in the array to get the normal
-            foreach (ContactPoint2D contact in col.contacts)
+            foreach (ContactPoint2D contact in collider.contacts)
             {
                 if (contact.normal == Vector2.up)
                 {
                     onGround = true;
+                    soundSource.PlayOneShot(landSound);
                 }
                 else
                 {
                     onGround = false;
                 }
             }
-        }        
-	}
-	void OnCollisionEnter2D(Collision2D collider)
-	{
-		if (collider.gameObject.CompareTag (SPIKES)) 
-		{
-            isDead = true;
-		}
+        }  
 	}
     void OnTriggerStay2D(Collider2D other)
     {            
@@ -221,6 +244,7 @@ public class Maya
 		{
 			body.AddForce(new Vector2(0, jumpHeight), ForceMode2D.Impulse);
 			onGround = false;
+            soundSource.PlayOneShot(jumpSound);
 		}
     }
 
@@ -250,16 +274,19 @@ public class Maya
     private void Climb(Vector2 up)
     {
         body.position = body.position + (up * climbSpeed); 
- 
     }
 
     private void Irradiate(float amount)
     {
-        radLevel += amount * Time.deltaTime;
         if (radLevel > MAX_RAD)
         {
-            DieAndReset();
+            if(!died)
+            {
+                died = true;
+                StartCoroutine(DieAndReset());
+            }
         }
+        radLevel += amount * Time.deltaTime;
     }
 
     private void Heal(float amount, bool isMeds)
@@ -272,16 +299,18 @@ public class Maya
         if (radLevel < 0)
         {
             radLevel = 0;
-        }
-        
+        }  
     }
 
     public float GetRadLevel()
     {
         return radLevel;
     }
-    private void DieAndReset()
+
+    public IEnumerator DieAndReset()
     {
+        soundSource.PlayOneShot(deathSound);
+        yield return new WaitForSeconds(deathSound.length);
         isDead = true;
     }
 }
