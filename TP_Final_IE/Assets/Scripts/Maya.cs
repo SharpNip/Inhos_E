@@ -14,6 +14,9 @@ public class Maya
 
     // Gameplay Variables
     private const float RADIATION = 3.0f;
+    
+    // Temp value for sound volume
+    public float soundVolume;
 
 	// Status Variables
     public bool isDead;
@@ -51,6 +54,12 @@ public class Maya
     public AudioClip deathSound;
     private AudioSource soundSource;
 
+    // Delegate
+    // Intentionally being dangerous with this (not using event in front of it)
+    // because I want the propagation of the stored "event" to go everywhere
+    public delegate void Reset(Maya maya);
+    public Reset reset;
+
     void Awake()
     {
         soundSource = GetComponent<AudioSource>();
@@ -71,7 +80,13 @@ public class Maya
         isSafe = true;
         isDead = false;
         died = false;
+        soundVolume = 0.5f;
 	}
+
+    public float GetRadLevel()
+    {
+        return radLevel;
+    }
 
 	void Update()
 	{
@@ -302,15 +317,19 @@ public class Maya
         }  
     }
 
-    public float GetRadLevel()
-    {
-        return radLevel;
-    }
+    
 
     public IEnumerator DieAndReset()
     {
         soundSource.PlayOneShot(deathSound);
+        
         yield return new WaitForSeconds(deathSound.length);
+        
+        if (reset != null)
+        {
+            reset(this);
+        }
+        
         isDead = true;
     }
 }

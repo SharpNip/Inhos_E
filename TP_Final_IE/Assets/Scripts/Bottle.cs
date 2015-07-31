@@ -10,6 +10,7 @@ public class Bottle
     // Personal elements
     private Collider2D myCol;
     private SpriteRenderer mySprite;
+    private Maya maya;
     private bool isActive;
     // amount by which the bottle can heal
     private float restoration;
@@ -20,7 +21,9 @@ public class Bottle
         myCol = GetComponent<BoxCollider2D>();
         mySprite = GetComponent<SpriteRenderer>();
         isActive = true;
-        restoration = 0;
+        restoration = 100.0f;
+        maya = (Maya)FindObjectOfType(typeof(Maya));
+        maya.reset += LevelResetted;
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -29,14 +32,19 @@ public class Bottle
         {
             if (isActive)
             {
-                restoration = 100.0f;
                 isActive = false;
                 mySprite.enabled = false;
                 myCol.enabled = false;
             }
         }
     }
-
+    private void LevelResetted(Maya maya)
+    {
+        maya.reset -= LevelResetted;
+        isActive = true;
+        mySprite.enabled = true;
+        myCol.enabled = true;
+    }
     public float GetRestored()
     {
         return restoration;
