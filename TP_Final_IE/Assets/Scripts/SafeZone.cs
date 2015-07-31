@@ -4,14 +4,13 @@ using System.Collections;
 public class SafeZone 
     : MonoBehaviour 
 {
- 
-    // amount by which the bottle can heal
-    private float restoration;
+    // Amount by which the bottle can heal
+    public float restoration;
     
     // Use this for initialization
     void Start()
     {
-        restoration = 5.0f;
+        restoration = 10.0f;
     }
     
    

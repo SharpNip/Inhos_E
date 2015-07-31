@@ -72,7 +72,7 @@ public class Maya
 		radLevel = 0;
         speed = 0;
 		climbSpeed = .05f;
-		jumpHeight = 5f;
+		jumpHeight = 2f;
         canClimb = false;
         isIdle = true;
 		onGround = true;
@@ -148,8 +148,7 @@ public class Maya
             isIdle = false;
             if (canClimb)
             {
-                Climb(Vector2.up);
-                
+                Climb(Vector2.up);         
             }
 			else
 			{
@@ -169,31 +168,14 @@ public class Maya
 	void OnCollisionStay2D(Collision2D col)
 	{
         // Checks if the collider encountered is the ground
-              
-	}
-    void OnCollisionExit2D(Collision2D collider)
-    {
-        if (collider.gameObject.CompareTag(GROUND))
-        {
-            onGround = false;
-        }  
-    }
-	void OnCollisionEnter2D(Collision2D collider)
-	{
-		if (collider.gameObject.CompareTag (SPIKES)) 
-		{
-            StartCoroutine(DieAndReset());
-            
-		}
-        if (collider.gameObject.CompareTag(GROUND))
+        if (col.gameObject.CompareTag(GROUND))
         {
             // Looks through all of the contact points in the array to get the normal
-            foreach (ContactPoint2D contact in collider.contacts)
+            foreach (ContactPoint2D contact in col.contacts)
             {
                 if (contact.normal == Vector2.up)
                 {
                     onGround = true;
-                    soundSource.PlayOneShot(landSound);
                 }
                 else
                 {
@@ -201,6 +183,38 @@ public class Maya
                 }
             }
         }  
+              
+	}
+    void OnCollisionExit2D(Collision2D collider)
+    {
+        if (collider.gameObject.CompareTag(GROUND))
+        {
+            onGround = false;
+        }
+        if (collider.gameObject.CompareTag(GROUND))
+        { 
+            foreach (ContactPoint2D contact in collider.contacts)
+            {
+                if (contact.normal == Vector2.up)
+                {
+                    soundSource.PlayOneShot(jumpSound, soundVolume);
+                }
+            }
+        } 
+
+    }
+	void OnCollisionEnter2D(Collision2D collider)
+	{
+		if (collider.gameObject.CompareTag (SPIKES)) 
+		{
+            StartCoroutine(DieAndReset());   
+		}
+        if (collider.gameObject.CompareTag(GROUND))
+        {
+            soundSource.PlayOneShot(landSound, soundVolume);
+        }
+
+       
 	}
     void OnTriggerStay2D(Collider2D other)
     {            
@@ -259,7 +273,6 @@ public class Maya
 		{
 			body.AddForce(new Vector2(0, jumpHeight), ForceMode2D.Impulse);
 			onGround = false;
-            soundSource.PlayOneShot(jumpSound);
 		}
     }
 
@@ -316,20 +329,14 @@ public class Maya
             radLevel = 0;
         }  
     }
-
-    
-
     public IEnumerator DieAndReset()
     {
         soundSource.PlayOneShot(deathSound);
-        
         yield return new WaitForSeconds(deathSound.length);
-        
         if (reset != null)
         {
             reset(this);
         }
-        
         isDead = true;
     }
 }

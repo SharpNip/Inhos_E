@@ -9,7 +9,7 @@ public class RadBarrel
 	
 	void Start () 
     {
-        radiation = 3.0f;
+        radiation = 6.0f;
 	}
 
 
