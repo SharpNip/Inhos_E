@@ -1,51 +1,50 @@
 ﻿using UnityEngine;
 using System.Collections;
+/// <summary>
+/// Maya
+/// No this is not the 3D animation tool, its the player class
+/// </summary>
+
 
 public class Maya 
     : MonoBehaviour 
 {
-
-    /*
-     * THE START FUNCTION IN THE LOCALISATION TOOL
-     * 
-     * Change the "Start" function from Start to Awake to ensure that the right date is loaded BEFORE
-     * The game is started, to avoid having a bunch of nullllls.
-     */
-
     // Gameplay Variables
     private const float RADIATION = 3.0f;
-    
+
     // Temp value for sound volume
     public float soundVolume;
 
-	// Status Variables
+    // Status Variables
     public bool isDead;
     private bool died;
     private bool isSafe;
-	private bool isIdle;
-	private bool canClimb;
-	private bool onGround;
-	private float radLevel;
+    private bool isIdle;
+    private bool canClimb;
+    private bool onGround;
+    private float radLevel;
 
-	// Movement variables
-	private const float MAX_RAD = 100;
-	private const float MAX_SPD = 10;
+    // Movement variables
+    private const float MAX_RAD = 100;
+    private const float MAX_SPD = 10;
     private const float INCREMENTATION = 3;
     private bool goingRight;
-	private float jumpHeight;
-	private float speed;
-	private float climbSpeed;
+    private bool hasJumped;
+    private float jumpHeight;
+    private float speed;
+    private float climbSpeed;
 
-	// Body components
-	private Rigidbody2D body;
+    // Body components
+    private Rigidbody2D body;
+    private Animator anim;
 
-	// Collider Tags
-	private const string GROUND = "Ground";
-	private const string SAFE_AREA = "SafeZone";
-	private const string SPIKES = "Spikes";
-	private const string DANGER_AREA = "RadBarrel";
-	private const string LADDER = "Ladder";
-	private const string SDPTA = "Bottle";
+    // Collider Tags
+    private const string GROUND = "Ground";
+    private const string SAFE_AREA = "SafeZone";
+    private const string SPIKES = "Spikes";
+    private const string DANGER_AREA = "RadBarrel";
+    private const string LADDER = "Ladder";
+    private const string SDPTA = "Bottle";
     private const string WALL = "Wall";
 
     // Sound Effects
@@ -53,6 +52,15 @@ public class Maya
     public AudioClip landSound;
     public AudioClip deathSound;
     private AudioSource soundSource;
+
+    // Animation enum
+    private enum state
+    {
+        IDLE  = 0, 
+        CLIMB = 1, 
+        LEFT  = 2, 
+        RIGHT = 3 
+    }
 
     // Delegate
     // Intentionally being dangerous with this (not using event in front of it)
@@ -64,15 +72,26 @@ public class Maya
     {
         soundSource = GetComponent<AudioSource>();
     }
+
 	void Start () 
     {
-		//Initialiasation of body components
+		// Initialiasation of body components
         body = GetComponent<Rigidbody2D>();
-        //Setting all status variables
-		radLevel = 0;
+        anim = GetComponent<Animator>();
+        // Setting all status variables
+        radLevel = 0;
+        // If playing in debug, make the character "invincible"
+#if DEBUG
+        radLevel = -10000;
+#endif
+        
         speed = 0;
 		climbSpeed = .05f;
-		jumpHeight = 2f;
+        jumpHeight = 2f;
+// If playing in debug, make the character "invincible"
+#if DEBUG
+        jumpHeight = 20f;
+#endif
         canClimb = false;
         isIdle = true;
 		onGround = true;
@@ -81,6 +100,7 @@ public class Maya
         isDead = false;
         died = false;
         soundVolume = 0.5f;
+        anim.SetInteger("State", (int)state.IDLE);
 	}
 
     public float GetRadLevel()
@@ -93,6 +113,7 @@ public class Maya
 		ManageInput();
         ManageStates();
     }
+    
     private void ManageStates()
     {
         if(!isSafe)
@@ -100,13 +121,15 @@ public class Maya
             Irradiate(RADIATION);
         }
     }
-	private void ManageInput()
+	
+    private void ManageInput()
 	{
         // Going Left
 		if (Input.GetKey(KeyCode.A))
 		{
             goingRight = false;
             isIdle = false;
+            anim.SetInteger("State", (int)state.LEFT);
             if (speed > MAX_SPD)
             {
                 speed = MAX_SPD;
@@ -122,6 +145,7 @@ public class Maya
         {
             goingRight = true;
             isIdle = false;
+            anim.SetInteger("State", (int)state.RIGHT);
             if (speed > MAX_SPD)
             {
                 speed = MAX_SPD;
@@ -135,7 +159,7 @@ public class Maya
         else
         {
             isIdle = true;
-
+            anim.SetInteger("State", (int)state.IDLE);
             if (speed > 0 && onGround)
             {
                 body.velocity -= body.velocity / INCREMENTATION;
@@ -148,6 +172,7 @@ public class Maya
             isIdle = false;
             if (canClimb)
             {
+                anim.SetInteger("State", (int)state.CLIMB);
                 Climb(Vector2.up);         
             }
 			else
@@ -158,8 +183,10 @@ public class Maya
         if (Input.GetKey(KeyCode.S))
         {
             isIdle = false;
+            
             if (canClimb)
             {
+                anim.SetInteger("State", (int)state.CLIMB);
                 Climb(-Vector2.up);
             }
         }
@@ -182,28 +209,18 @@ public class Maya
                     onGround = false;
                 }
             }
-        }  
-              
+        }         
 	}
+    
     void OnCollisionExit2D(Collision2D collider)
     {
         if (collider.gameObject.CompareTag(GROUND))
         {
             onGround = false;
         }
-        if (collider.gameObject.CompareTag(GROUND))
-        { 
-            foreach (ContactPoint2D contact in collider.contacts)
-            {
-                if (contact.normal == Vector2.up)
-                {
-                    soundSource.PlayOneShot(jumpSound, soundVolume);
-                }
-            }
-        } 
-
     }
-	void OnCollisionEnter2D(Collision2D collider)
+	
+    void OnCollisionEnter2D(Collision2D collider)
 	{
 		if (collider.gameObject.CompareTag (SPIKES)) 
 		{
@@ -211,11 +228,14 @@ public class Maya
 		}
         if (collider.gameObject.CompareTag(GROUND))
         {
-            soundSource.PlayOneShot(landSound, soundVolume);
+            if (hasJumped && !canClimb)
+            {
+                soundSource.PlayOneShot(landSound, soundVolume);
+                hasJumped = false;
+            }
         }
-
-       
 	}
+   
     void OnTriggerStay2D(Collider2D other)
     {            
         if (other.CompareTag(SAFE_AREA))
@@ -249,6 +269,7 @@ public class Maya
             body.gravityScale = 1;
         }        
     }
+   
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(LADDER))
@@ -271,7 +292,12 @@ public class Maya
     {
 		if(onGround)
 		{
-			body.AddForce(new Vector2(0, jumpHeight), ForceMode2D.Impulse);
+            if (!hasJumped)
+            {
+                hasJumped = true;
+                soundSource.PlayOneShot(jumpSound, soundVolume);
+            }
+            body.AddForce(new Vector2(0, jumpHeight), ForceMode2D.Impulse);
 			onGround = false;
 		}
     }
@@ -329,7 +355,8 @@ public class Maya
             radLevel = 0;
         }  
     }
-    public IEnumerator DieAndReset()
+   
+    private IEnumerator DieAndReset()
     {
         soundSource.PlayOneShot(deathSound);
         yield return new WaitForSeconds(deathSound.length);

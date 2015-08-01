@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Camera Class:
+/// THis class takes care of simply following the player, adding a certain measure of difficulty (as the player cannot see beyond the edges)
+/// </summary>
+
 public class Camera 
     : MonoBehaviour
 {

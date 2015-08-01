@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// RadBarrel
+/// 
+/// This class is the "Danger zone" depicted in the UML, when the player gets close it it, he takes more damage than he normally does
+/// </summary>
+
+
 public class RadBarrel 
     : MonoBehaviour 
 {
